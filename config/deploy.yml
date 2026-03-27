@@ -6,8 +6,8 @@ servers:
     hosts:
       - 204.168.132.32
     cmd: /entrypoint.sh
-    volumes:
-      - /data/vigil/database:/var/www/html/database
+    options:
+      volume: /data/vigil/database:/var/www/html/database
 
 proxy:
   ssl: true
