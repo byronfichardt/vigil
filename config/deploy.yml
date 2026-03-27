@@ -7,7 +7,7 @@ servers:
       - 204.168.132.32
     cmd: /entrypoint.sh
     options:
-      volume: /data/vigil/database:/var/www/html/database
+      volume: /data/vigil/database.sqlite:/var/www/html/database/database.sqlite
 
 proxy:
   ssl: true
