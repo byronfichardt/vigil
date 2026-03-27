@@ -15,6 +15,7 @@ RUN apk add --no-cache \
     nginx \
     supervisor \
     libzip-dev \
+    sqlite-dev \
     curl \
     && docker-php-ext-install pdo pdo_sqlite zip opcache pcntl \
     && rm -rf /var/cache/apk/*
