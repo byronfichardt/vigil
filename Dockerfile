@@ -56,9 +56,8 @@ RUN mkdir -p /var/log/supervisor
 RUN rm -f bootstrap/cache/packages.php bootstrap/cache/services.php \
     && php artisan package:discover --ansi
 
-# Cache routes and views (don't need env vars)
-RUN php artisan route:cache \
-    && php artisan view:cache
+# Cache views (routes cached at runtime in entrypoint to include Livewire)
+RUN php artisan view:cache
 
 # Entrypoint script
 COPY docker/entrypoint.sh /entrypoint.sh
