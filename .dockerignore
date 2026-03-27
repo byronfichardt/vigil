@@ -1,0 +1,12 @@
+.git
+node_modules
+vendor
+.env
+.env.backup
+.env.prod
+bootstrap/cache/*.php
+tests
+.github
+docker-compose*.yml
+*.md
+.kamal
