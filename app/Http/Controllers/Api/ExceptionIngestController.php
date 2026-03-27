@@ -44,51 +44,56 @@ class ExceptionIngestController extends Controller
 
         $now = Carbon::parse($validated['occurred_at'] ?? now());
 
-        $group = ExceptionGroup::firstOrCreate(
-            [
-                'project_id' => $project->id,
-                'fingerprint' => $fingerprint,
-            ],
-            [
-                'exception_class' => $validated['exception_class'],
+        try {
+            $group = ExceptionGroup::firstOrCreate(
+                [
+                    'project_id' => $project->id,
+                    'fingerprint' => $fingerprint,
+                ],
+                [
+                    'exception_class' => $validated['exception_class'],
+                    'message' => $validated['message'],
+                    'file' => $validated['file'],
+                    'line' => $validated['line'],
+                    'status' => 'unresolved',
+                    'first_seen_at' => $now,
+                    'last_seen_at' => $now,
+                    'occurrence_count' => 0,
+                ]
+            );
+
+            $group->update([
                 'message' => $validated['message'],
-                'file' => $validated['file'],
-                'line' => $validated['line'],
-                'status' => 'unresolved',
-                'first_seen_at' => $now,
                 'last_seen_at' => $now,
-                'occurrence_count' => 0,
-            ]
-        );
+                'occurrence_count' => $group->occurrence_count + 1,
+            ]);
 
-        $group->update([
-            'message' => $validated['message'],
-            'last_seen_at' => $now,
-            'occurrence_count' => $group->occurrence_count + 1,
-        ]);
+            if ($group->status === 'resolved') {
+                $group->update(['status' => 'unresolved']);
+            }
 
-        // Re-open resolved exceptions if they recur
-        if ($group->status === 'resolved') {
-            $group->update(['status' => 'unresolved']);
+            $occurrence = ExceptionOccurrence::create([
+                'exception_group_id' => $group->id,
+                'message' => $validated['message'],
+                'stack_trace' => $validated['stack_trace'],
+                'request_url' => $validated['request_url'] ?? null,
+                'request_method' => $validated['request_method'] ?? null,
+                'request_headers' => $validated['request_headers'] ?? null,
+                'request_body' => $validated['request_body'] ?? null,
+                'request_query_params' => $validated['request_query_params'] ?? null,
+                'user_info' => $validated['user_info'] ?? null,
+                'environment' => $validated['environment'] ?? null,
+                'hostname' => $validated['hostname'] ?? null,
+                'app_version' => $validated['app_version'] ?? null,
+                'php_version' => $validated['php_version'] ?? null,
+                'laravel_version' => $validated['laravel_version'] ?? null,
+                'occurred_at' => $now,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to store exception. Please try again later.',
+            ], 503);
         }
-
-        $occurrence = ExceptionOccurrence::create([
-            'exception_group_id' => $group->id,
-            'message' => $validated['message'],
-            'stack_trace' => $validated['stack_trace'],
-            'request_url' => $validated['request_url'] ?? null,
-            'request_method' => $validated['request_method'] ?? null,
-            'request_headers' => $validated['request_headers'] ?? null,
-            'request_body' => $validated['request_body'] ?? null,
-            'request_query_params' => $validated['request_query_params'] ?? null,
-            'user_info' => $validated['user_info'] ?? null,
-            'environment' => $validated['environment'] ?? null,
-            'hostname' => $validated['hostname'] ?? null,
-            'app_version' => $validated['app_version'] ?? null,
-            'php_version' => $validated['php_version'] ?? null,
-            'laravel_version' => $validated['laravel_version'] ?? null,
-            'occurred_at' => $now,
-        ]);
 
         return response()->json([
             'message' => 'Exception recorded.',

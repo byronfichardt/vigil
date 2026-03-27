@@ -5,4 +5,4 @@ use App\Http\Middleware\ValidateProjectApiKey;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/exceptions', [ExceptionIngestController::class, 'store'])
-    ->middleware(ValidateProjectApiKey::class);
+    ->middleware(['throttle:api-ingest', ValidateProjectApiKey::class]);

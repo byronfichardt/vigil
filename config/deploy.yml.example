@@ -1,0 +1,45 @@
+service: vigil
+image: your-registry-username/vigil
+
+servers:
+  web:
+    hosts:
+      - your-server-ip
+    cmd: /entrypoint.sh
+    options:
+      volume: /data/vigil/database.sqlite:/var/www/html/database/database.sqlite
+
+proxy:
+  ssl: true
+  host: your-domain.com
+  app_port: 80
+  healthcheck:
+    path: /up
+    interval: 3
+    timeout: 120
+  run:
+    metrics_port: 1318
+
+registry:
+  server: ghcr.io
+  username: your-registry-username
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: amd64
+
+env:
+  clear:
+    APP_NAME: "Vigil"
+    APP_ENV: production
+    APP_DEBUG: "false"
+    APP_URL: https://your-domain.com
+    LOG_CHANNEL: stack
+    LOG_LEVEL: error
+    DB_CONNECTION: sqlite
+    SESSION_DRIVER: database
+    QUEUE_CONNECTION: database
+    CACHE_STORE: database
+  secret:
+    - APP_KEY

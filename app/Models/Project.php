@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 #[Fillable(['name', 'created_by'])]
 class Project extends Model
 {
+    protected $hidden = ['api_key'];
     protected static function booted(): void
     {
         static::creating(function (Project $project) {
