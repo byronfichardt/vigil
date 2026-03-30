@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
-#[Fillable(['name', 'created_by'])]
+#[Fillable(['name', 'created_by', 'log_retention_days'])]
 class Project extends Model
 {
     protected $hidden = ['api_key'];
@@ -29,5 +29,10 @@ class Project extends Model
     public function exceptionGroups(): HasMany
     {
         return $this->hasMany(ExceptionGroup::class);
+    }
+
+    public function logEntries(): HasMany
+    {
+        return $this->hasMany(LogEntry::class);
     }
 }

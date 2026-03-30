@@ -5,7 +5,7 @@
     </div>
 
     {{-- Stats --}}
-    <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div class="rounded-lg border border-gray-800 bg-gray-900 p-6">
             <p class="text-sm font-medium text-gray-400">Total Projects</p>
             <p class="mt-2 text-3xl font-bold text-white">{{ $projects->count() }}</p>
@@ -17,6 +17,10 @@
         <div class="rounded-lg border border-gray-800 bg-gray-900 p-6">
             <p class="text-sm font-medium text-gray-400">Active Last 24h</p>
             <p class="mt-2 text-3xl font-bold text-yellow-400">{{ $last24h }}</p>
+        </div>
+        <div class="rounded-lg border border-gray-800 bg-gray-900 p-6">
+            <p class="text-sm font-medium text-gray-400">Logs Last 24h</p>
+            <p class="mt-2 text-3xl font-bold text-blue-400">{{ $logsLast24h }}</p>
         </div>
     </div>
 

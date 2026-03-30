@@ -7,6 +7,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\ExceptionDetail;
 use App\Livewire\ProjectExceptions;
 use App\Livewire\ProjectIndex;
+use App\Livewire\ProjectLogs;
 use App\Livewire\ProjectCreate;
 use App\Livewire\ProjectSettings;
 use App\Livewire\Setup;
@@ -26,6 +27,7 @@ Route::middleware(EnsureSetupComplete::class)->group(function () {
         Route::get('/projects', ProjectIndex::class)->name('projects.index');
         Route::get('/projects/create', ProjectCreate::class)->name('projects.create');
         Route::get('/projects/{project}', ProjectExceptions::class)->name('projects.show');
+        Route::get('/projects/{project}/logs', ProjectLogs::class)->name('projects.logs');
         Route::get('/projects/{project}/settings', ProjectSettings::class)->name('projects.settings');
         Route::get('/exceptions/{exceptionGroup}', ExceptionDetail::class)->name('exceptions.show');
     });

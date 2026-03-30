@@ -22,6 +22,27 @@
         </div>
     </div>
 
+    {{-- Log Retention --}}
+    <div class="rounded-lg border border-gray-800 bg-gray-900 p-6 mb-6">
+        <h2 class="text-lg font-semibold text-white mb-4">Log Retention</h2>
+        <p class="text-sm text-gray-400 mb-4">Configure how long log entries are kept before automatic pruning. Leave empty to use the global default ({{ config('vigil.log_retention_days', 30) }} days).</p>
+
+        <form wire:submit="saveLogRetention" class="flex items-end gap-3">
+            <div>
+                <label for="logRetentionDays" class="block text-sm font-medium text-gray-300 mb-1">Retention (days)</label>
+                <input type="number" id="logRetentionDays" wire:model="logRetentionDays" min="1" max="365" placeholder="{{ config('vigil.log_retention_days', 30) }}"
+                    class="w-32 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500">
+            </div>
+            <button type="submit"
+                class="rounded-lg bg-vigil-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-vigil-500 transition-colors">
+                Save
+            </button>
+        </form>
+        @error('logRetentionDays')
+            <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+        @enderror
+    </div>
+
     {{-- Setup Instructions --}}
     <div class="rounded-lg border border-gray-800 bg-gray-900 p-6">
         <h2 class="text-lg font-semibold text-white mb-4">Setup Instructions</h2>
@@ -40,7 +61,7 @@ VIGIL_KEY={{ $project->api_key }}</code></pre>
 
             <div>
                 <p class="text-sm font-medium text-gray-300 mb-2">3. That's it!</p>
-                <p class="text-sm text-gray-400">Exceptions will be automatically captured and sent to Vigil. You can optionally publish the config to customize ignored exceptions:</p>
+                <p class="text-sm text-gray-400">Exceptions and logs will be automatically captured and sent to Vigil. By default, logs at <code class="text-vigil-400">warning</code> level and above are forwarded. Publish the config to customize:</p>
                 <pre class="mt-2 rounded-lg bg-gray-800 border border-gray-700 p-4 text-sm text-gray-200 overflow-x-auto"><code>php artisan vendor:publish --tag=vigil-config</code></pre>
             </div>
         </div>

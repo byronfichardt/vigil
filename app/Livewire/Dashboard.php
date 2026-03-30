@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\ExceptionGroup;
+use App\Models\LogEntry;
 use App\Models\Project;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -21,11 +22,13 @@ class Dashboard extends Component
 
         $totalUnresolved = ExceptionGroup::where('status', 'unresolved')->count();
         $last24h = ExceptionGroup::where('last_seen_at', '>=', now()->subDay())->count();
+        $logsLast24h = LogEntry::where('logged_at', '>=', now()->subDay())->count();
 
         return view('livewire.dashboard', [
             'projects' => $projects,
             'totalUnresolved' => $totalUnresolved,
             'last24h' => $last24h,
+            'logsLast24h' => $logsLast24h,
         ]);
     }
 }

@@ -15,6 +15,18 @@
         </div>
     </div>
 
+    {{-- Sub-nav tabs --}}
+    <div class="flex items-center gap-4 border-b border-gray-800 mb-6">
+        <a href="{{ route('projects.show', $project) }}" wire:navigate
+            class="border-b-2 border-vigil-500 pb-3 pt-1 text-sm font-medium text-white transition-colors">
+            Exceptions
+        </a>
+        <a href="{{ route('projects.logs', $project) }}" wire:navigate
+            class="border-b-2 border-transparent pb-3 pt-1 text-sm font-medium text-gray-400 hover:text-white transition-colors">
+            Logs
+        </a>
+    </div>
+
     {{-- Filters --}}
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center gap-2">
